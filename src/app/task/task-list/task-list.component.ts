@@ -36,7 +36,9 @@ import { TaskService, type Task } from '../task.service'
       </table>
     }
 
-    @if (counter$ | async; as counterVal) {
+    @let counterVal = counter$ | async;
+    
+    @if (counterVal != null) {
       @defer(when counterVal >= 10) {
         <h1>{{counterVal}} tasks created! Really large module</h1>
       }
