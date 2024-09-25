@@ -6,21 +6,24 @@ import { TaskService, type Task } from '../task.service'
   selector: 'app-task-list',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-    <div *ngIf="isLoading; else loadComplete">
+    @if(isLoading) {
       <app-loading/>
-    </div>
-    <ng-template #loadComplete>
+    } @else {
       <div>
         <input [(ngModel)]="contents" placeholder="Task Contents" />
         <button (click)="createTask()" [disabled]="!contents">Add Task</button>
       </div>
       <table>
-        <tr *ngFor="let task of taskList">
-          <app-task-item-row [task]="task" (onChanged)="onTaskChange(task.taskId)"></app-task-item-row>
-        </tr>
-        <tr *ngIf="taskList.length === 0">NO TASKS</tr>
+        @for(task of taskList; track task.taskId) {
+          <tr>
+            <app-task-item-row [task]="task" (onChanged)="onTaskChange(task.taskId)"></app-task-item-row>
+          </tr>
+        }
+        @if(taskList.length === 0){
+          <tr>NO TASKS</tr>
+        }
       </table>
-    </ng-template>
+    }
 
     <h1 *ngIf="(counter$ | async)! >= 10 && (counter$ | async) as counterVal">{{counterVal}} tasks created! Really large module</h1>
   `
