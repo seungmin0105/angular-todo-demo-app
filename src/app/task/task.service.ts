@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, take, EMPTY, delay } from 'rxjs'
-import { type Task } from './task.model'
+import { Observable, of, take, EMPTY, delay, BehaviorSubject } from 'rxjs'
 
 @Injectable()
 export class TaskService {
-  counter: number
   taskList: Task[]
+  counter$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   constructor() {
     this.taskList = [
       { taskId: 0, status: false, contents: '서버팀 세미나 참석' },
       { taskId: 1, status: false, contents: '서버팀 회식' }
     ]
-    this.counter = 2
+    this.counter$.next(2)
   }
 
   // Mock post request
   postTask (contents: string): Observable<void> {
+    const nextTaskId = this.counter$.getValue() + 1
+    this.counter$.next(nextTaskId)
     const newTask = {
-      taskId: this.counter++,
+      taskId: nextTaskId,
       contents,
       status: false,
     }
@@ -42,4 +43,10 @@ export class TaskService {
   getTaskList (): Observable<Task[]> {
     return of<Task[]>(this.taskList).pipe(take(1), delay(500))
   }
+}
+
+export interface Task {
+  taskId: number
+  contents: string
+  status: boolean
 }

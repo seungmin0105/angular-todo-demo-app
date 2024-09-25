@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { type Task } from '../task.model'
-import { TaskService } from '../task.service'
+import { TaskService, type Task } from '../task.service'
 
 @Component({
   selector: 'app-task-item-row',

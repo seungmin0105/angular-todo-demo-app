@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core'
-import { finalize } from 'rxjs'
-import { type Task } from '../task.model'
-import { TaskService } from '../task.service'
+import { finalize, Observable } from 'rxjs'
+import { TaskService, type Task } from '../task.service'
 
 @Component({
   selector: 'app-task-list',
@@ -22,6 +21,8 @@ import { TaskService } from '../task.service'
         <tr *ngIf="taskList.length === 0">NO TASKS</tr>
       </table>
     </ng-template>
+
+    <h1 *ngIf="(counter$ | async)! >= 10 && (counter$ | async) as counterVal">{{counterVal}} tasks created! Really large module</h1>
   `
 })
 export class TaskListComponent implements OnInit {
@@ -33,6 +34,10 @@ export class TaskListComponent implements OnInit {
     private readonly taskService: TaskService,
     private readonly cdr: ChangeDetectorRef
   ) {
+  }
+
+  get counter$ (): Observable<number> {
+    return this.taskService.counter$
   }
 
   ngOnInit () {
