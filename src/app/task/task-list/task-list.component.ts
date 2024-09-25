@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
 import { finalize, Observable } from 'rxjs'
 import { TaskService, type Task } from '../task.service'
 
 @Component({
   selector: 'app-task-list',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if(isLoading) {
+    @if(isLoading()) {
       <app-loading/>
     } @else {
       <div>
@@ -16,7 +16,7 @@ import { TaskService, type Task } from '../task.service'
       <table>
         @for(task of taskList; track task.taskId) {
           <tr>
-            <app-task-item-row [task]="task" (onChanged)="onTaskChange(task.taskId)"></app-task-item-row>
+            <app-task-item-row [task]="task" (onChanged)="onTaskChange($event)"></app-task-item-row>
           </tr>
         }
         @if(taskList.length === 0){
@@ -26,14 +26,14 @@ import { TaskService, type Task } from '../task.service'
     }
 
     @if (counter$ | async; as counterVal) {
-      @defer(when counterVal < 10) {
+      @defer(when counterVal >= 10) {
         <h1>{{counterVal}} tasks created! Really large module</h1>
       }
     }
   `
 })
 export class TaskListComponent implements OnInit {
-  isLoading: boolean = true
+  isLoading = signal<boolean>(true)
   taskList: Task[] = []
   contents: string = ''
 
@@ -52,7 +52,7 @@ export class TaskListComponent implements OnInit {
   }
 
   search () {
-    this.isLoading = true
+    this.isLoading.set(true)
 
     this.taskService.getTaskList()
       .pipe(finalize(this.showFinalize))
@@ -78,7 +78,6 @@ export class TaskListComponent implements OnInit {
   }
 
   private readonly showFinalize = (): void => {
-    this.isLoading = false
-    this.cdr.detectChanges()
+    this.isLoading.set(false)
   }
 }
