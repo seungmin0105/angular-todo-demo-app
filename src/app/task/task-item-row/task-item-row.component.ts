@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core'
 import { TaskService, type Task } from '../task.service'
 
 @Component({
@@ -13,13 +13,17 @@ import { TaskService, type Task } from '../task.service'
       </td>
   `,
 })
-export class TaskItemRowComponent {
+export class TaskItemRowComponent implements OnChanges {
   @Input({ required: true }) task!: Task
   @Output() onChanged: EventEmitter<number> = new EventEmitter<number>()
 
   constructor (
     private readonly taskService: TaskService,
   ) {
+  }
+
+  ngOnChanges (changes: SimpleChanges) {
+    console.log('Changed! : ', changes['task'].currentValue.taskId)
   }
 
   finishTask () {
