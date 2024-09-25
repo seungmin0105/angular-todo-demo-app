@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, take, EMPTY, delay, BehaviorSubject } from 'rxjs'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TaskService {
   taskList: Task[]
   counter$: BehaviorSubject<number> = new BehaviorSubject<number>(0)

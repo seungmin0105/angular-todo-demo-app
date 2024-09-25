@@ -1,9 +1,20 @@
+import { CommonModule } from '@angular/common'
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal } from '@angular/core'
+import { FormsModule } from '@angular/forms'
 import { finalize, Observable } from 'rxjs'
+import { TaskItemRowComponent } from '../task-item-row/task-item-row.component'
+import { LoadingComponent } from '../../loading/loading.component'
 import { TaskService, type Task } from '../task.service'
 
 @Component({
   selector: 'app-task-list',
+  standalone: true,
+  imports: [
+    LoadingComponent,
+    TaskItemRowComponent,
+    CommonModule,
+    FormsModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if(isLoading()) {

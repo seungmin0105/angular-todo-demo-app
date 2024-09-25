@@ -1,8 +1,9 @@
-import { Component, input, output, effect, Output, EventEmitter } from '@angular/core'
+import { Component, input, output, effect } from '@angular/core'
 import { TaskService, type Task } from '../task.service'
 
 @Component({
   selector: 'app-task-item-row',
+  standalone: true,
   template: `
       <td> {{ task().taskId }} </td>
       <td> {{ task().contents }} </td>
