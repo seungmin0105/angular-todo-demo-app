@@ -25,7 +25,11 @@ import { TaskService, type Task } from '../task.service'
       </table>
     }
 
-    <h1 *ngIf="(counter$ | async)! >= 10 && (counter$ | async) as counterVal">{{counterVal}} tasks created! Really large module</h1>
+    @if (counter$ | async; as counterVal) {
+      @defer(when counterVal < 10) {
+        <h1>{{counterVal}} tasks created! Really large module</h1>
+      }
+    }
   `
 })
 export class TaskListComponent implements OnInit {
